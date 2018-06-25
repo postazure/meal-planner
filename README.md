@@ -10,6 +10,17 @@ Automate meal planning.
 1. User can set their preference of similar/diverse protein/vegetables per week.
 
 ## Development
+### Setup
+Setup Postgresql
+
+`createdb meal_planner_dev`
+
+Then create a user for the app.
+
+```
+CREATE USER meal_planner_user;
+GRANT ALL PRIVILEGES on database meal_planner_dev to meal_planner_user;
+```
 
 ### Start client and server
 Start the server: `npm run start:server`

@@ -2,19 +2,22 @@
   "name": "meal-planner",
   "version": "0.1.0",
   "private": true,
-	"proxy": "http://localhost:5000/",
-	"no-proxy": "api",
+  "proxy": "http://localhost:5000/",
+  "no-proxy": "api",
   "dependencies": {
     "express": "^4.16.3",
+    "pg": "^7.4.3",
+    "pg-hstore": "^2.3.2",
     "react": "^16.4.1",
     "react-dom": "^16.4.1",
     "react-router-dom": "^4.3.1",
-    "react-scripts": "1.1.4"
+    "react-scripts": "1.1.4",
+    "sequelize": "^4.38.0"
   },
   "scripts": {
     "start": "react-scripts start",
-		"start:server": "node src/server",
-		"start:server:prod": "NODE_ENV=production node src/server",
+    "start:server": "node src/server",
+    "start:server:prod": "NODE_ENV=production node src/server",
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject"
