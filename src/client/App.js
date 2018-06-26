@@ -2,6 +2,7 @@ import React from 'react'
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom'
 import './App.css'
 import About from './components/about/about'
+import MealsPage from './pages/meals'
 
 export default class App extends React.Component {
   render() {
@@ -12,6 +13,7 @@ export default class App extends React.Component {
 					<Switch>
 						<Route exact path="/" component={()=><div>Home</div>}/>
 						<Route path="/about" component={About}/>
+						<Route path="/meals" component={MealsPage}/>
 					</Switch>
 				</Router>  
       </div>
