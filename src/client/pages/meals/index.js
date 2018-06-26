@@ -15,7 +15,7 @@ class MealsIndex extends React.Component {
 		return (
 			<div>
 				<h1>All Meals</h1>
-				{this.props.meals.map(meal => <MealCard {...meal}/>)}
+				{this.props.meals.map((meal, i) => <MealCard key={i} {...meal}/>)}
 			</div>
 	)}
 }

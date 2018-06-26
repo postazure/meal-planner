@@ -1,5 +1,6 @@
 import React from 'react'
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom'
+import io from 'socket.io-client'
 import { Provider } from 'react-redux'
 import store from './store'
 
@@ -7,8 +8,11 @@ import './App.css'
 import About from './components/about/about'
 import MealsPage from './pages/meals'
 
-
 export default class App extends React.Component {
+	componentDidMount () {
+		io.connect("45.33.42.177:5000")
+	}
+
   render() {
     return (
       <Provider store={store} className="App">
