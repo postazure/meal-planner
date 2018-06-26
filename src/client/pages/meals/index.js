@@ -1,24 +1,31 @@
 import React from 'react'
+import { connect } from 'react-redux'
+import * as MealsSelectors from '../../store/selectors/meals.js'
+import * as MealsActions from '../../store/actions/meals.js'
+
 import MealCard from '../../components/meal-card/meal-card.js'
 
-export default class MealsIndex extends React.Component {
-	state = {meals: []}
-
+class MealsIndex extends React.Component {
+	
 	componentDidMount () {
-		fetch('/api/meals')
-			.then(res => {
-				return res.json()
-			})
-			.then(body => {
-				this.setState({meals: body.meals})
-			})
+		this.props.getMeals()	
 	}
 
 	render() {
 		return (
 			<div>
 				<h1>All Meals</h1>
-				{this.state.meals.map(meal => <MealCard {...meal}/>)}
+				{this.props.meals.map(meal => <MealCard {...meal}/>)}
 			</div>
 	)}
 }
+
+const mapStateToProps = (state) => ({
+	meals: MealsSelectors.getAll(state)
+})
+
+const mapDispatchToProps = (dispatch) => ({
+	getMeals: () => MealsActions.getAll(dispatch) 
+})
+
+export default connect(mapStateToProps, mapDispatchToProps)(MealsIndex)
