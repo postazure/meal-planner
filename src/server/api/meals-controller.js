@@ -1,11 +1,12 @@
-const MealsController = {
-	index: (req, res) => {
-		const meals = {
-			meals: []
-		}
+export default class MealsController {
+	constructor(repository) {
+		this.repository = repository
+	}
 
-		res.send(meals)
+	index = (req, res) => {
+		this.repository.findAll()
+			.then(meals => {
+				res.send({ meals })
+			})
 	}
 }
-
-module.exports = MealsController
