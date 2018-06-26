@@ -20,7 +20,7 @@
   "scripts": {
     "start": "react-scripts start",
     "start:server": "nodemon src/server --exec babel-node",
-    "start:server:prod": "NODE_ENV=production node build/index.js",
+    "serve": "NODE_ENV=production node build/index.js",
     "build": "react-scripts build",
     "build:server": "babel src/server -d build",
     "test": "react-scripts test --env=jsdom",
