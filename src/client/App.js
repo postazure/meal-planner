@@ -7,10 +7,15 @@ import store from './store'
 import './App.css'
 import About from './components/about/about'
 import MealsPage from './pages/meals'
+import * as MealsActions from './store/actions/meals.js'
+
+const socket = io.connect("45.33.42.177:5000")
 
 export default class App extends React.Component {
 	componentDidMount () {
-		io.connect("45.33.42.177:5000")
+		socket.on('meals', ({meals}) => {
+			store.dispatch(MealsActions.setAll(meals))
+		})
 	}
 
   render() {

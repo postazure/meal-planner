@@ -1,16 +1,10 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import * as MealsSelectors from '../../store/selectors/meals.js'
-import * as MealsActions from '../../store/actions/meals.js'
 
 import MealCard from '../../components/meal-card/meal-card.js'
 
 class MealsIndex extends React.Component {
-	
-	componentDidMount () {
-		this.props.getMeals()	
-	}
-
 	render() {
 		return (
 			<div>
@@ -24,8 +18,4 @@ const mapStateToProps = (state) => ({
 	meals: MealsSelectors.getAll(state)
 })
 
-const mapDispatchToProps = (dispatch) => ({
-	getMeals: () => MealsActions.getAll(dispatch) 
-})
-
-export default connect(mapStateToProps, mapDispatchToProps)(MealsIndex)
+export default connect(mapStateToProps)(MealsIndex)

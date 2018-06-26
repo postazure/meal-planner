@@ -29,11 +29,11 @@ Meal.sync({force: true})
 	})
 
 import Repository from './repositories/repository.js'
-const mealRepository = new Repository(Meal)
+const mealsRepository = new Repository(Meal)
 
 
 import MealsController from './api/meals-controller.js'
-const mealsController = new MealsController(mealRepository)
+const mealsController = new MealsController(mealsRepository)
 
 app.get('/api/meals', (req, res) => mealsController.index(req, res))
 
@@ -50,6 +50,11 @@ if (process.env.NODE_ENV === 'production') {
 
 io.on('connection', (socket) => {
 	console.log('[SOCKET.IO] a user connected')
+
+	mealsRepository.findAll()
+		.then(meals => {
+			socket.emit('meals', { meals })
+		})
 
 	socket.on('disconnect', () => {
 		console.log('[SOCKET.IO] user disconnected')

@@ -7,9 +7,6 @@ const INITIAL_STATE = {
 export default (state = INITIAL_STATE, {type, data}) => {
 
 	switch(type) {
-		case Actions.STATUS:
-			return {...state, status: {...state.status, ...data}}
-
 		case Actions.SET_ALL:
 			return {...state, meals: data}
 
