@@ -1,16 +1,20 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import * as MealsSelectors from '../../store/selectors/meals.js'
+import { BrowserRouter as Router, Route, Switch } from 'react-router-dom'
 
-import MealCard from '../../components/meal-card/meal-card.js'
+import * as MealsSelectors from '../../store/selectors/meals.js'
+import MealsList from '../../components/meals-list/meals-list.js'
+import MealsForm from '../../components/meals-form/meals-form.js'
 
 class MealsIndex extends React.Component {
 	render() {
 		return (
-			<div>
-				<h1>All Meals</h1>
-				{this.props.meals.map((meal, i) => <MealCard key={i} {...meal}/>)}
-			</div>
+			<Router>
+				<Switch>
+					<Route path="/meals/new" component={MealsForm} />
+					<Route exact path="/meals" component={(routerProps) => <MealsList {...routerProps} meals={this.props.meals} />}/>
+				</Switch>
+			</Router>
 	)}
 }
 
