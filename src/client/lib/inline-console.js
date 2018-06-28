@@ -10,7 +10,10 @@ export default class InlineConsole extends React.Component {
 	state = {
 		logs: [],
 		hidden: true,
-		countOnHide: 0
+		countOnHide: 0,
+		displayLog: true,
+		displayWarn: true,
+		displayError: true
 	}
 
 	componentDidMount () {
@@ -46,16 +49,28 @@ export default class InlineConsole extends React.Component {
 
 	messageCountSinceClose = () => this.state.logs.length - this.state.countOnHide
 
+	toggleFilter = (filter) => { this.setState({ [filter]: !this.state[filter]}) }
+
 	render () {
 		if (this.state.hidden) {
 			return <button className="inline-console-toggle" onClick={this.showConsole}>Console{this.messageCountSinceClose() ? ` (${this.messageCountSinceClose()})` : ''}</button>
 		}
+		
+		const messages = this.state.logs
+		.filter(({type}) => (type === LOG && this.state.displayLog) || (type === WARN && this.state.displayWarn) || (type === ERROR && this.state.displayError))
+		.map( ({type, message, timestamp}) => <div className={`message ${type}`} key={timestamp}><span className="type">{type}:</span> {message}</div>)
 
 		return (
 			<div className="inline-console"> 
-				<div className="banner">Console <button onClick={this.hideConsole}>Hide</button></div> 
+				<div className="banner">
+					Console:
+					<span className="filter"><input type="checkbox" onChange={() => this.toggleFilter('displayLog')} checked={this.state.displayLog}/>{LOG}</span>
+					<span className="filter"><input type="checkbox" onChange={() => this.toggleFilter('displayWarn')} checked={this.state.displayWarn}/>{WARN}</span>
+					<span className="filter"><input type="checkbox" onChange={() => this.toggleFilter('displayError')} checked={this.state.displayError}/>{ERROR}</span>
+					<button onClick={this.hideConsole}>Hide</button>
+				</div> 
 				<div className="logs">
-					{ this.state.logs.map( ({type, message, timestamp}) => <div className={`message ${type}`} key={timestamp}><span className="type">{type}:</span> {message}</div>) }
+					{ messages }
 				</div>
 		</div>
 		)

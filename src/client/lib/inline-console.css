@@ -33,6 +33,11 @@
 	padding: 2px 16px;
 }
 
+.inline-console .banner .filter {
+	margin: 8px;
+	font-weight: 100;
+}
+
 .inline-console .banner button {
 	float: right;
 }
