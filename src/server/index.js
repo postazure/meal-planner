@@ -6,7 +6,10 @@ const server = require('http').createServer(app)
 const io = require('socket.io')(server)
 import * as SocketChannels from '../constants/socket-io-channels.js'
 import * as PubSubChannels from '../constants/pubsub-channels.js'
+
 import PubSub from 'pubsub-js'
+PubSub.immediateExceptions = app.get('env') == 'development'
+
 const port = process.env.PORT || 5000;
 
 import database from './database.js'
@@ -35,11 +38,6 @@ import Repository from './repositories/repository.js'
 const mealsRepository = new Repository(Meal, {create: PubSubChannels.MEALS_CREATE})
 
 
-import MealsController from './api/meals-controller.js'
-const mealsController = new MealsController(mealsRepository)
-
-app.get('/api/meals', (req, res) => mealsController.index(req, res))
-
 if (process.env.NODE_ENV === 'production') {
 	// Serve any static files
 		app.use(express.static(path.join(__dirname, '..', '..', 'build')));
@@ -60,16 +58,14 @@ io.on('connection', (socket) => {
 		})
 	
 	PubSub.subscribe(PubSubChannels.MEALS_CREATE, () => {
-		console.log("Updating Meals")
-		mealsRepository.findAll()
+		mealsRepository.findAll({ attributes: ['title', 'description'] })
 			.then(meals => {
 				socket.emit(SocketChannels.MEALS, { meals })
 			})
 	})
 
 	socket.on(SocketChannels.MEALS_CREATE, (meal) => {
-		console.log("Creating Meal")
-		Meal.create(meal)
+		mealsRepository.create(meal)
 	})
 
 	socket.on('disconnect', () => {

@@ -14,14 +14,10 @@ import * as SocketChannels from '../constants/socket-io-channels.js'
 const socket = window.socket = io.connect("45.33.42.177:5000")
 
 export default class App extends React.Component {
-	state = {
-		res: {}
-	} 
 
 	componentDidMount () {
-		socket.on(SocketChannels.MEALS, (res) => {
-			this.setState({res})
-			store.dispatch(MealsActions.setAll(res.meals))
+		socket.on(SocketChannels.MEALS, ({ meals }) => {
+			store.dispatch(MealsActions.setAll(meals))
 		})
 	}
 
@@ -30,7 +26,6 @@ export default class App extends React.Component {
       <Provider store={store} className="App">
 				<div>
         	<header className="App-header">Meal Planning App</header>
-					<h1>Response: {JSON.stringify(this.state.res)}</h1>
       		<Router>
 						<Switch>
 							<Route exact path="/" component={()=><div>Home</div>}/>

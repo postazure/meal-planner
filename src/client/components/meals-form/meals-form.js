@@ -6,7 +6,6 @@ export default class MealsForm extends React.Component {
 
 	handleSubmit = e => {
 		e.preventDefault()
-		alert("Submitting")
 		MealsActions.create(this.state)
 	}
 
