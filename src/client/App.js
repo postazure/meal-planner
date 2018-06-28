@@ -1,4 +1,5 @@
 import React from 'react'
+import InlineConsole from './lib/inline-console.js'
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom'
 import io from 'socket.io-client'
 import { Provider } from 'react-redux'
@@ -27,12 +28,16 @@ export default class App extends React.Component {
 				<div>
         	<header className="App-header">Meal Planning App</header>
       		<Router>
+						<div>
 						<Switch>
 							<Route exact path="/" component={()=><div>Home</div>}/>
 							<Route path="/about" component={About}/>
 							<Route path="/meals" component={MealsPage}/>
 						</Switch>
+						</div>
 					</Router>  
+
+					<InlineConsole/>
 				</div>
       </Provider>
     )

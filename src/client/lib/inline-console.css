@@ -1,0 +1,51 @@
+.inline-console-toggle {
+	position: fixed;
+	bottom: 0;
+	right: 0;
+}
+
+.inline-console {
+	position: absolute;
+	background-color: #d7e4e8;
+	border: solid 1px darkgrey;
+	bottom: 0;
+	box-sizing: border-box;
+	width: 100%;
+}
+
+.inline-console {
+	float: right;
+}
+
+.inline-console .message {
+	font-size: 12px;
+	border-bottom: 1px solid white;
+	margin: 0 16px;
+	padding: 4px 0;
+}
+
+.inline-console .message.log { color: black; }
+.inline-console .message.warn { color: brown; }
+.inline-console .message.error { color: red; }
+
+.inline-console .banner {
+	background-color: #dcdcdc;
+	padding: 2px 16px;
+}
+
+.inline-console .banner button {
+	float: right;
+}
+
+.inline-console .logs { 
+	overflow-y: auto;
+	height: 180px;
+	width: 100%;
+	border-top: 1px solid black;
+}
+
+.inline-console .type {
+	font-weight: bold;
+	text-decoration: underline;
+	margin-right: 8px;
+}
