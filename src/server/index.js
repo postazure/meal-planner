@@ -4,6 +4,9 @@ const path = require('path');
 const app = express();
 const server = require('http').createServer(app)
 const io = require('socket.io')(server)
+import * as SocketChannels from '../constants/socket-io-channels.js'
+import * as PubSubChannels from '../constants/pubsub-channels.js'
+import PubSub from 'pubsub-js'
 const port = process.env.PORT || 5000;
 
 import database from './database.js'
@@ -29,7 +32,7 @@ Meal.sync({force: true})
 	})
 
 import Repository from './repositories/repository.js'
-const mealsRepository = new Repository(Meal)
+const mealsRepository = new Repository(Meal, {create: PubSubChannels.MEALS_CREATE})
 
 
 import MealsController from './api/meals-controller.js'
@@ -53,8 +56,21 @@ io.on('connection', (socket) => {
 
 	mealsRepository.findAll()
 		.then(meals => {
-			socket.emit('meals', { meals })
+			socket.emit(SocketChannels.MEALS, { meals })
 		})
+	
+	PubSub.subscribe(PubSubChannels.MEALS_CREATE, () => {
+		console.log("Updating Meals")
+		mealsRepository.findAll()
+			.then(meals => {
+				socket.emit(SocketChannels.MEALS, { meals })
+			})
+	})
+
+	socket.on(SocketChannels.MEALS_CREATE, (meal) => {
+		console.log("Creating Meal")
+		Meal.create(meal)
+	})
 
 	socket.on('disconnect', () => {
 		console.log('[SOCKET.IO] user disconnected')
