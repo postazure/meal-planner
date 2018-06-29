@@ -54,3 +54,7 @@
 	text-decoration: underline;
 	margin-right: 8px;
 }
+
+.inline-console .console-input input {
+	width: 100%;
+}

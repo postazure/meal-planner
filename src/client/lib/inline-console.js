@@ -43,6 +43,8 @@ export default class InlineConsole extends React.Component {
 	}
 
 	typeMessages = (type, messages) => messages.map( message => ({ type, message, timestamp: Date.now() }) )
+	
+	sanitizeString = (string) => string.replace(/[\u2018\u2019]/g, "'").replace(/[\u201C\u201D]/g, '"')
 
 	hideConsole = () => { this.setState({hidden: true, countOnHide: this.state.logs.length}) }
 	showConsole = () => { this.setState({hidden: false, countOnHide: 0}) }
@@ -50,6 +52,14 @@ export default class InlineConsole extends React.Component {
 	messageCountSinceClose = () => this.state.logs.length - this.state.countOnHide
 
 	toggleFilter = (filter) => { this.setState({ [filter]: !this.state[filter]}) }
+	
+	handleInput = (e) => {
+		e.preventDefault()
+
+		// eslint-disable-next-line
+		eval(this.sanitizeString(this.state.input))
+		this.setState({input: ''})
+	}
 
 	render () {
 		if (this.state.hidden) {
@@ -71,6 +81,11 @@ export default class InlineConsole extends React.Component {
 				</div> 
 				<div className="logs">
 					{ messages }
+				</div>
+				<div className="console-input">
+					<form onSubmit={this.handleInput}>
+						<input type="text" onChange={e => this.setState({input: e.target.value})} value={this.state.input}/>
+					</form>
 				</div>
 		</div>
 		)
