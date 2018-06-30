@@ -8,12 +8,20 @@ const ERROR = 'error'
 export default class InlineConsole extends React.Component {
 	
 	state = {
+		input: '',
 		logs: [],
 		hidden: true,
 		countOnHide: 0,
 		displayLog: true,
 		displayWarn: true,
 		displayError: true
+	}
+
+	componentShouldUpdate(newProps, newState) {
+		if ( JSON.stringify(newState.logs[0]) !== JSON.stringify(this.state.logs[0]) ) {
+			return false
+		}
+		return true
 	}
 
 	componentDidMount () {
@@ -23,9 +31,9 @@ export default class InlineConsole extends React.Component {
 
 		this.originalConsoleClear = window.console.clear
 
-		window.console.log = (...msgs) => this.console(LOG, ...msgs)
-		window.console.warn = (...msgs) => this.console(WARN, ...msgs)
-		window.console.error = (...msgs) => this.console(ERROR, ...msgs)
+		window.console.log = (...msgs) => this.console(LOG, msgs)
+		window.console.warn = (...msgs) => this.console(WARN, msgs)
+		window.console.error = (...msgs) => this.console(ERROR, msgs)
 		
 		window.console.clear = () => this.setState({logs: [], countOnHide: 0})
 	}
@@ -38,11 +46,8 @@ export default class InlineConsole extends React.Component {
 		window.console.clear = this.originalConsoleClear
 	}
 
-	console = (type, ...messages) => {
-		this.setState({ logs: [ ...this.typeMessages(type, messages), ...this.state.logs ] })
-	}
-
-	typeMessages = (type, messages) => messages.map( message => ({ type, message, timestamp: Date.now() }) )
+	console = (type, messages) => { this.setState({ logs: [...this.typeMessages(type, messages), ...this.state.logs] }) }
+	typeMessages = (type, messages) => messages.map( ( message, i ) => ({ type, message, timestamp: Date.now(), index: i }) )
 	
 	sanitizeString = (string) => string.replace(/[\u2018\u2019]/g, "'").replace(/[\u201C\u201D]/g, '"')
 
@@ -56,8 +61,13 @@ export default class InlineConsole extends React.Component {
 	handleInput = (e) => {
 		e.preventDefault()
 
-		// eslint-disable-next-line
-		eval(this.sanitizeString(this.state.input))
+		try {
+			// eslint-disable-next-line
+			eval(this.sanitizeString(this.state.input))
+		} catch (error) {
+			console.error(error.toString())
+		}
+		
 		this.setState({input: ''})
 	}
 
@@ -68,7 +78,7 @@ export default class InlineConsole extends React.Component {
 		
 		const messages = this.state.logs
 		.filter(({type}) => (type === LOG && this.state.displayLog) || (type === WARN && this.state.displayWarn) || (type === ERROR && this.state.displayError))
-		.map( ({type, message, timestamp}) => <div className={`message ${type}`} key={timestamp}><span className="type">{type}:</span> {message}</div>)
+		.map( ({type, message, timestamp, index}) => <div className={`message ${type}`} key={`${timestamp}-${index}`}><span className="type">{type}:</span> {message}</div>)
 
 		return (
 			<div className="inline-console"> 
