@@ -9,6 +9,8 @@ export default class InlineConsole extends React.Component {
 	
 	state = {
 		input: '',
+		inputHistory: [],
+		inputHistoryPointer: 0,
 		logs: [],
 		hidden: true,
 		countOnHide: 0,
@@ -63,12 +65,45 @@ export default class InlineConsole extends React.Component {
 
 		try {
 			// eslint-disable-next-line
-			eval(this.sanitizeString(this.state.input))
+			console.log(eval(this.sanitizeString(this.state.input)))
 		} catch (error) {
 			console.error(error.toString())
 		}
 		
-		this.setState({input: ''})
+		this.appendToHistory(this.state.input)
+		this.setState({ input: '', inputHistoryPointer: 0 })
+	}
+
+	historyBack = () => { 
+		let pointer = this.state.inputHistoryPointer + 1;
+		if (pointer >= this.state.inputHistory.length) {
+			pointer = 0
+		}
+
+		this.setState({ input: this.state.inputHistoryPointer[pointer], inputHistoryPointer: pointer }) 
+	}
+
+	historyForward = () => {
+		let pointer = this.state.inputHistoryPointer - 1
+		if (pointer < 0) {
+			pointer = this.state.inputHistory.length - 1
+		}
+
+		this.setState({ input: this.state.inputHistoryPointer[pointer], inputHistoryPointer: pointer }) 
+	}
+
+	appendToHistory = (values) => { this.setState({ inputHistory: [...values, ...this.state.inputHistory] }) }
+
+	handleInputKeyPress = (e) => {
+		const up = 38
+		if (e.keyCode === up || e.key === 'UIKeyInputUpArrow' || e.key === 'Tab') {
+			this.historyForward()
+		}
+
+		const down = 40
+		if (e.keyCode === down || e.key === 'UIKeyInputDownArrow') {
+			this.historyBack()
+		}
 	}
 
 	render () {
@@ -94,10 +129,13 @@ export default class InlineConsole extends React.Component {
 				</div>
 				<div className="console-input">
 					<form onSubmit={this.handleInput}>
-						<input type="text" onChange={e => this.setState({input: e.target.value})} value={this.state.input}/>
+						<input type="text" onChange={e => this.setState({input: e.target.value})} onKeyDown={this.handleInputKeyPress} value={this.state.input}/>
 					</form>
+					<button onClick={this.historyBack}>v</button>
+					<button onClick={this.historyForward}>^</button>
 				</div>
 		</div>
 		)
 	} 
+
 }
