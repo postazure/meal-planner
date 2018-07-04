@@ -26,13 +26,12 @@ database
 
 
 const Meal = MealModel(database)
-Meal.sync({force: true})
-	.then(() => {
-		return Meal.create({
-			title: "Hamburger",
-			description: "It's a patty of ground beef, cooked to a safe temperature. Usually served on a bun."
-		})
-	})
+Meal.sync({force: true}).then(() =>
+	Meal.create({
+	title: "Hamburger",
+	description: "It's a patty of ground beef, cooked to a safe temperature. Usually served on a bun.",
+	timing: 'lunch'
+}))
 
 import Repository from './repositories/repository.js'
 const mealsRepository = new Repository(Meal, {create: PubSubChannels.MEALS_CREATE})
